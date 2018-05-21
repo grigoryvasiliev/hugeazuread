@@ -1,1 +1,1 @@
-docker build -t rmaz/gen -f Dockerfile .
+docker build -t rmaz/gen -f dockerfile .
