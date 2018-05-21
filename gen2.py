@@ -9,7 +9,9 @@ user = "admin@" + tenant
 password = sys.argv[2]
 page = int(sys.argv[3])
 cycles = int(sys.argv[4])
-group_template = sys.argv[5]
+
+import uuid
+group_template = 'group_fib' + str(uuid.uuid4())
 
 
 def token():
@@ -46,8 +48,12 @@ def post(entity, token, body):
         'Content-Type' : 'application/json'
         }
 
-    req = urllib.request.Request(api, data = json.dumps(body).encode('utf8'), headers = headers)
-    res = urllib.request.urlopen(req)
+    try:
+        req = urllib.request.Request(api, data = json.dumps(body).encode('utf8'), headers = headers)
+        res = urllib.request.urlopen(req)
+    except Exception as e:
+        print(body)
+        raise e
     
     print('.', end=' ')
         
@@ -159,21 +165,16 @@ def process(results, token, i):
     ids = []
     
     for o in results:
-#        try:        
+        try:        
             body = gen(o)
-
-            #print('.')
-
             id = post('users', token, body)        
-
             ids.append(id)
-
+            
             if(len(ids) == a + b):            
                 a = b
                 b = len(ids)
                 print(b,end=' ')
                 body = gen1('%s%i_%i' % (group_template, i,len(ids)))
-                
                 group_id = post('groups', token, body)
 
                 for id in ids:
@@ -184,8 +185,8 @@ def process(results, token, i):
                     post('groups/' + group_id + '/members/$ref', token, body)
                 print('+', end=' ')
 
-#        except Exception as e:
-#            print(e)
+        except Exception as e:
+            print(e)
 
 
 for i in range(cycles):
