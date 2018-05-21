@@ -2,26 +2,15 @@ import urllib.request
 import json
 import urllib.parse
 import random
-
+import sys
 
 tenant = sys.argv[1]
 user = "admin@" + tenant
 password = sys.argv[2]
+page = int(sys.argv[3])
+cycles = int(sys.argv[4])
+group_template = sys.argv[5]
 
-import ssl
-import aiohttp
-
-def get_session():
-    context = ssl.create_default_context()
-    # use only TLSv1_2 and higher
-    context.options |= ssl.OP_NO_TLSv1
-    context.options |= ssl.OP_NO_TLSv1_1
-
-    session = aiohttp.ClientSession(
-        connector=aiohttp.TCPConnector(ssl_context=context, force_close=True, enable_cleanup_closed=True),
-        cookie_jar=aiohttp.DummyCookieJar()
-    )
-    return session
 
 def token():
     
@@ -199,11 +188,7 @@ def process(results, token, i):
 #            print(e)
 
 
-page = 1000
-
-
-
-for i in range(3):
+for i in range(cycles):
 
     res1 = urllib.request.urlopen('https://randomuser.me/api/?results=%i' % page)
 
