@@ -1,21 +1,12 @@
-
-# coding: utf-8
-
-# In[7]:
-
-
 import urllib.request
 import json
 import urllib.parse
 import random
 
-tenant = "***"
+
+tenant = sys.argv[1]
 user = "admin@" + tenant
-password = '***'
-
-
-group_template = 'fibgroup_a'
-
+password = sys.argv[2]
 
 import ssl
 import aiohttp
@@ -209,6 +200,8 @@ def process(results, token, i):
 
 
 page = 1000
+
+
 
 for i in range(3):
 
