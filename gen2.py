@@ -173,6 +173,7 @@ def process(results, i, ids):
             ids.append(id)
             
             if(time.time() - t > 3000):
+                print('refresh token')
                 t = time.time()
                 token = auth()
                         
@@ -194,17 +195,14 @@ def process(results, i, ids):
         except Exception as e:
             print(e)
 
+ids = []
+tm = time.time()
 
 for i in range(cycles):
-
-    ids = []
-
     res1 = urllib.request.urlopen('https://randomuser.me/api/?results=%i' % page)
-
     results = json.loads(res1.read())['results']
-
     process(results, i, ids)
-    
-    print('.', end=' ')
+    print()
+    print('processed page = %i, %i sec' % (page, time.time() - tm ) )
 
 
