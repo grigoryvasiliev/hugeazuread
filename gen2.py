@@ -3,6 +3,7 @@ import json
 import urllib.parse
 import random
 import sys
+import time
 
 tenant = sys.argv[1]
 user = "admin@" + tenant
@@ -14,7 +15,7 @@ import uuid
 group_template = 'group_fib' + str(uuid.uuid4())
 
 
-def token():
+def auth():
     
     url = 'https://login.windows.net/' + tenant + '/oauth2/token?api-version=1.0'
 
@@ -115,7 +116,7 @@ jtitles = ['Software Engineer',
 country = [key for key in iso]
 
 def gen(o):
-    name = o['login']['username']
+    name = o['login']['username'] + str(uuid.uuid4())
     c = random.choice(country)
 
     return {
@@ -157,12 +158,13 @@ def gen1(name):
           ]    
     }
 
-def process(results, token, i):
+def process(results, i, ids):
     
     a = 1
-    b = 1
-
-    ids = []
+    b = 1    
+    
+    t = time.time()
+    token = auth()
     
     for o in results:
         try:        
@@ -170,7 +172,11 @@ def process(results, token, i):
             id = post('users', token, body)        
             ids.append(id)
             
-            if(len(ids) == a + b):            
+            if(time.time() - t > 3000):
+                t = time.time()
+                token = auth()
+                        
+            if(len(ids) == a + b):
                 a = b
                 b = len(ids)
                 print(b,end=' ')
@@ -191,11 +197,13 @@ def process(results, token, i):
 
 for i in range(cycles):
 
+    ids = []
+
     res1 = urllib.request.urlopen('https://randomuser.me/api/?results=%i' % page)
 
     results = json.loads(res1.read())['results']
 
-    process(results, token(), i)
+    process(results, i, ids)
     
     print('.', end=' ')
 
