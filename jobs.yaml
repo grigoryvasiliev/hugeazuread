@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: gen4k-
+spec:
+  parallelism: 40
+  template:
+    spec:
+      containers:
+      - name: gen
+        image: {registry}/gen@sha256:ceaf7ac8d9b0ec3293fd035fffc658b15a78eb62d7d4b322333db41bf97e0146
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+          requests:
+            cpu: 25m
+            memory: 128Mi
+        args: ["{tenant}","{password}","200","20"]
+      restartPolicy: Never

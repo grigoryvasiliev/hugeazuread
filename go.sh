@@ -1,0 +1,1 @@
+kubectl create -f ./job.yaml --validate=false --namespace gri-gen
