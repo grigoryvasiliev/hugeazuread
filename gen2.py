@@ -158,10 +158,7 @@ def gen1(name):
           ]    
     }
 
-def process(results, i, ids):
-    
-    a = 1
-    b = 1    
+def process(results, i, ids, a, b):
     
     t = time.time()
     token = auth()
@@ -197,11 +194,13 @@ def process(results, i, ids):
 
 ids = []
 tm = time.time()
+a = 1
+b = 1
 
 for i in range(cycles):
     res1 = urllib.request.urlopen('https://randomuser.me/api/?results=%i' % page)
     results = json.loads(res1.read())['results']
-    process(results, i, ids)
+    process(results, i, ids, a, b)
     print()
     print('processed page = %i, %i sec' % (page, time.time() - tm ) )
 
